@@ -1,0 +1,42 @@
+version: "3.7"
+
+services:
+
+  nginx:
+    image: nginx:1.19.5
+    ports:
+      - 80:80
+    networks:
+      - jung_network
+    volumes:
+      - /home/meanwo1017/nginx.conf:/etc/nginx/nginx.conf
+      - jung_static:/data/static/
+      - jung_media:/data/media/
+
+  django_container_gunicorn:
+    image: django_test_image:4
+    networks:
+      - jung_network
+    volumes:
+      - jung_static:/home/djangoProject/staticfiles/
+      - jung_media:/home/djangoProject/media/
+
+  mariadb:
+    image: mariadb:10.5
+    networks:
+      - jung_network
+    volumes:
+      - jung_mariadb:/var/lib/mysql
+    environment:
+      MARIADB_ROOT_PASSWORD: password1234
+      MARIADB_DATABASE: django
+      MARIADB_USER: django
+      MARIADB_PASSWORD: password1234
+
+networks:
+  jung_network:
+
+volumes:
+  jung_static:
+  jung_media:
+  jung_mariadb:
