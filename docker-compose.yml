@@ -5,14 +5,17 @@ services:
   nginx:
     image: nginx:1.19.5
     ports:
-      - 80:80
+      - mode: host
+        protocol: tcp
+        target: 80
+        published: 80
     networks:
       - jung_network
     volumes:
       - /home/meanwo1017/nginx.conf:/etc/nginx/nginx.conf
       - jung_static:/data/static/
       - jung_media:/data/media/
-
+      - jung_log:/var/log/nginx/
   django_container_gunicorn:
     image: django_test_image:5
     networks:
@@ -47,6 +50,7 @@ volumes:
   jung_static:
   jung_media:
   jung_mariadb:
+  jung_log:
 
 secrets:
   DJANGO_SECRET_KEY:
