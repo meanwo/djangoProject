@@ -16,6 +16,16 @@ services:
       - jung_static:/data/static/
       - jung_media:/data/media/
       - jung_log:/var/log/nginx/
+    secrets:
+      - NGINX_AUTH
+
+  goaccess:
+    image: allinurl/goaccess:1.5.1
+    ports:
+    - 7890:7890
+    volumes:
+    - jung_log:/var/log/nginx/
+    command: /var/log/nginx/jung_access.log -o /var/log/nginx/report.html --real-time-html --log-format COMBINED
   django_container_gunicorn:
     image: django_test_image:5
     networks:
@@ -60,4 +70,6 @@ secrets:
   MARIADB_PASSWORD:
     external: true
   MARIADB_USER:
+    external: true
+  NGINX_AUTH:
     external: true
